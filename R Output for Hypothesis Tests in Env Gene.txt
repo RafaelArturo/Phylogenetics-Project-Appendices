@@ -1,0 +1,343 @@
+> ################################################
+> ## R Code for Hypothesis Testing for ENV Gene ##
+> ################################################
+> 
+> # Open the necessary libraries for the hypotheses tests:
+> library(ape)
+> library(phangorn)
+> 
+> # read the data for the env genome data set without the outgroup:
+> env.data = read.phyDat(file = "hiv-envgen-gapstrip.fasta", format = "fasta", type = "DNA")
+> 
+> # Use NJ Tree in the hypotheses tests.
+> env.dist = dist.ml(env.data, model = "F81")
+> env.treeNJ = NJ(env.dist)
+> 
+> 
+> #######################################
+> # Hierarchical Likelihood Ratio Tests #
+> #######################################
+> 
+> # Use modelTest on the best tree found under neighbour-joining that will compute the objects:
+> # AIC, AICc, AICcw, AICw, BIC, df, logLik, Model
+> env.mt = modelTest(env.data, tree = env.treeNJ, model = c("JC", "F81", "K80", "HKY", "TrNe", "TrN", "SYM",
++   "GTR"), G = TRUE, I = TRUE, FREQ = FALSE, k = 4,
++   control = pml.control(epsilon = 1e-08, maxit = 10, trace = 1),
++   multicore = FALSE, mc.cores = NULL)
+[1] "JC+I"
+[1] "JC+G"
+[1] "JC+G+I"
+[1] "F81+I"
+[1] "F81+G"
+[1] "F81+G+I"
+[1] "K80+I"
+[1] "K80+G"
+[1] "K80+G+I"
+[1] "HKY+I"
+[1] "HKY+G"
+[1] "HKY+G+I"
+[1] "TrNe+I"
+[1] "TrNe+G"
+[1] "TrNe+G+I"
+[1] "TrN+I"
+[1] "TrN+G"
+[1] "TrN+G+I"
+[1] "SYM+I"
+[1] "SYM+G"
+[1] "SYM+G+I"
+[1] "GTR+I"
+[1] "GTR+G"
+[1] "GTR+G+I"
+> env.stats = cbind(env.mt$Model, env.mt$logLik, env.mt$df)
+> colnames(env.stats) = c("Model", "  log-likelihood", "  df")
+> env.stats
+      Model        log-likelihood      df 
+ [1,] "JC"       "-33435.5059724257" "91" 
+ [2,] "JC+I"     "-31759.3342021587" "92" 
+ [3,] "JC+G"     "-30907.081937875"  "92" 
+ [4,] "JC+G+I"   "-30865.8010485717" "93" 
+ [5,] "F81"      "-33193.0353710525" "94" 
+ [6,] "F81+I"    "-31456.774049793"  "95" 
+ [7,] "F81+G"    "-30566.2764023988" "95" 
+ [8,] "F81+G+I"  "-30523.903155595"  "96" 
+ [9,] "K80"      "-32540.9672267994" "92" 
+[10,] "K80+I"    "-30843.4203343044" "93" 
+[11,] "K80+G"    "-29952.0634147675" "93" 
+[12,] "K80+G+I"  "-29908.102291281"  "94" 
+[13,] "HKY"      "-32351.5102182182" "95" 
+[14,] "HKY+I"    "-30589.1310365584" "96" 
+[15,] "HKY+G"    "-29684.6070140099" "96" 
+[16,] "HKY+G+I"  "-29635.6803851831" "97" 
+[17,] "TrNe"     "-32487.1743220689" "93" 
+[18,] "TrNe+I"   "-30813.9626505433" "94" 
+[19,] "TrNe+G"   "-29910.1048423532" "94" 
+[20,] "TrNe+G+I" "-29867.1952860929" "95" 
+[21,] "TrN"      "-32349.1786934903" "96" 
+[22,] "TrN+I"    "-30589.1219042946" "97" 
+[23,] "TrN+G"    "-29684.4576108356" "97" 
+[24,] "TrN+G+I"  "-29635.6662651768" "98" 
+[25,] "SYM"      "-32325.6579309704" "96" 
+[26,] "SYM+I"    "-30700.4603553355" "97" 
+[27,] "SYM+G"    "-29759.5373626882" "97" 
+[28,] "SYM+G+I"  "-29722.1828589759" "98" 
+[29,] "GTR"      "-32195.3261985883" "99" 
+[30,] "GTR+I"    "-30490.6147100592" "100"
+[31,] "GTR+G"    "-29609.0078858007" "100"
+[32,] "GTR+G+I"  "-29567.0224047114" "101"
+> 
+> 
+> # Hierarchical Likelihood Ratio Tests:
+> maxnooftests = 6
+> 
+> Model_H0 = rep(0, maxnooftests)
+> log_H0 = rep(0, maxnooftests)
+> df_H0 = rep(0, maxnooftests)
+> 
+> Model_H1 = rep(0, maxnooftests)
+> log_H1 = rep(0, maxnooftests)
+> df_H1 = rep(0, maxnooftests)
+> 
+> LRT = rep(0, maxnooftests)
+> df.diff = rep(0, maxnooftests)
+> crit.region = rep(0, maxnooftests)
+> decision = rep(0, maxnooftests)
+> 
+> Model_H0 = as.character(Model_H0)
+> Model_H1 = as.character(Model_H1)
+> decision = as.character(decision)
+> 
+> # Location of H0 and H1 from the env.stats.pml.
+> H0_modelloc = 1
+> H1_modelloc = 5
+> 
+> i = 0
+> j = 1
+> 
+> while(j <= maxnooftests){
++ i = i+1
++ 
++ Model_H0[i] = env.stats[H0_modelloc, 1]
++ log_H0[i] = as.numeric(env.stats[H0_modelloc, 2])
++ df_H0[i] = as.numeric(env.stats[H0_modelloc, 3])
++ 
++ Model_H1[i] = env.stats[H1_modelloc, 1]
++ log_H1[i] = as.numeric(env.stats[H1_modelloc, 2])
++ df_H1[i] = as.numeric(env.stats[H1_modelloc, 3])
++ 
++ LRT[i] = 2*( log_H1[i] - log_H0[i] )
++ df.diff[i] = df_H1[i] - df_H0[i]
++ if(j > 4){
++ crit.region[i] = 5.41
++ # Since H0 for +G and +I tests follow a 50:50 mixture of 0 point mass
++ # and Chi-Squared(1), that test statistic has to be used.
++ # Obtained from Yang(2006)
++ }
++ 
++ else{
++ crit.region[i] = qchisq(0.01, df=df.diff[i], lower.tail=F)     # At 1% CR
++ }
++ 
++ 
++ if( as.numeric(LRT[i]) >= as.numeric(crit.region[i]) ){
++ decision[i] = "Reject_H0"
++ }
++ 
++ if( as.numeric(LRT[i]) < as.numeric(crit.region[i]) ){
++ decision[i] = "Reject_H1"
++ }
++ 
++ 
++ if(j == 1){
++ if(decision[i] == "Reject_H1"){
++ H0_modelloc = H0_modelloc
++ }
++ 
++ else if(decision[i] == "Reject_H0"){
++ H0_modelloc = H1_modelloc
++ }
++ 
++ H1_modelloc = H0_modelloc + 8
++ j = j+1
++ }
++ 
++ else if(j == 2){
++ if(decision[i] == "Reject_H1"){
++ H0_modelloc = H0_modelloc
++ H1_modelloc = H0_modelloc + 2
++ j = maxnooftests - 1
++ }
++ 
++ else if(decision[i] == "Reject_H0"){
++ H0_modelloc = H1_modelloc
++ H1_modelloc = H0_modelloc + 8
++ j = j+1
++ }
++ }
++ 
++ else if(j == 3){
++ if(decision[i] == "Reject_H1"){
++ H0_modelloc = H0_modelloc
++ H1_modelloc = H0_modelloc + 16
++ }
++ 
++ else if(decision[i] == "Reject_H0"){
++ H0_modelloc = H1_modelloc
++ H1_modelloc = H0_modelloc + 8
++ }
++ 
++ j = j+1
++ }
++ 
++ else if(j == 4){
++ if(decision[i] == "Reject_H1"){
++ H0_modelloc = H0_modelloc
++ }
++ 
++ else if(decision[i] == "Reject_H0"){
++ H0_modelloc = H1_modelloc
++ }
++ 
++ H1_modelloc = H0_modelloc + 2
++ j = j+1
++ }
++ 
++ 
++ else if(j == maxnooftests-1){
++ if(decision[i] == "Reject_H1"){
++ H0_modelloc = H0_modelloc
++ }
++ 
++ else if(decision[i] == "Reject_H0"){
++ H0_modelloc = H1_modelloc
++ }
++ 
++ H1_modelloc = H0_modelloc + 1
++ j = j+1
++ 
++ }
++ 
++ else if(j == maxnooftests){
++ if(decision[i] == "Reject_H1"){
++ env.best.model = env.stats[H0_modelloc, 1]
++ }
++ else if(decision[i] == "Reject_H0"){
++ env.best.model = env.stats[H1_modelloc, 1]
++ }
++ j = j+1
++ }
++ 
++ }
+> 
+> 
+> env.hypothtests = cbind( Model_H0, log_H0, df_H0, Model_H1, log_H1, df_H1, LRT, df.diff, crit.region, decision )
+> env.hypothtests
+     Model_H0 log_H0              df_H0 Model_H1  log_H1              df_H1
+[1,] "JC"     "-33435.5059724257" "91"  "F81"     "-33193.0353710525" "94" 
+[2,] "F81"    "-33193.0353710525" "94"  "HKY"     "-32351.5102182182" "95" 
+[3,] "HKY"    "-32351.5102182182" "95"  "TrN"     "-32349.1786934903" "96" 
+[4,] "HKY"    "-32351.5102182182" "95"  "GTR"     "-32195.3261985883" "99" 
+[5,] "GTR"    "-32195.3261985883" "99"  "GTR+G"   "-29609.0078858007" "100"
+[6,] "GTR+G"  "-29609.0078858007" "100" "GTR+G+I" "-29567.0224047114" "101"
+     LRT                df.diff crit.region        decision   
+[1,] "484.941202746399" "3"     "11.3448667301444" "Reject_H0"
+[2,] "1683.0503056686"  "1"     "6.63489660102121" "Reject_H0"
+[3,] "4.66304945580487" "1"     "6.63489660102121" "Reject_H1"
+[4,] "312.368039259803" "4"     "13.2767041359876" "Reject_H0"
+[5,] "5172.6366255752"  "1"     "5.41"             "Reject_H0"
+[6,] "83.9709621786023" "1"     "5.41"             "Reject_H0"
+> 
+> 
+> # Selected Nucleotide Substitution Model:
+> env.best.model
+    Model 
+"GTR+G+I" 
+> 
+> # Here, we see that it is the GTR+I+G.
+> # The model can be derived as follows:
+> env = attr(env.mt, "env")
+> env.ML.model = eval(get("GTR+G+I", env), env)
+> env.ML.model
+
+ loglikelihood: -29567.02 
+
+unconstrained loglikelihood: -11969.62 
+Proportion of invariant sites: 0.2610525 
+Discrete gamma model
+Number of rate categories: 4 
+Shape parameter: 0.8036216 
+
+Rate matrix:
+          a        c        g         t
+a 0.0000000 1.813272 3.970244 0.7719366
+c 1.8132725 0.000000 0.899224 3.9772203
+g 3.9702444 0.899224 0.000000 1.0000000
+t 0.7719366 3.977220 1.000000 0.0000000
+
+Base frequencies:  
+0.3781515 0.1789778 0.2140863 0.2287844 
+> 
+> ############################################################################################
+> 
+> #############################
+> #   Molecular Clock Tests   #
+> #############################
+> 
+> # To test the molecular clock assumption, we need to derive the likelihood scores from PAML software.
+> # The PAML software requires the use of a tree.
+> # We will use the GTR+G tree derived from these LRTs to compare the molecular clock assumption.
+> # The option of invariable sites is not available in PAML.
+> env.PAML.model = eval(get("GTR+G", env), env)
+> env.PAML.model
+
+ loglikelihood: -29609.01 
+
+unconstrained loglikelihood: -11969.62 
+Discrete gamma model
+Number of rate categories: 4 
+Shape parameter: 0.4382452 
+
+Rate matrix:
+         a        c        g        t
+a 0.000000 1.928064 4.073932 0.794072
+c 1.928064 0.000000 0.942302 4.116677
+g 4.073932 0.942302 0.000000 1.000000
+t 0.794072 4.116677 1.000000 0.000000
+
+Base frequencies:  
+0.3752989 0.1761421 0.2165816 0.2319773 
+> 
+> # For the molecular clock tests:
+> # Tree for H0 is unrooted. Tree from H1 is rooted.
+> # We will root via the midpoint since we have no outgroup.
+> 
+> 
+> ############################################################
+> # Rooted Tree for PAML
+> 
+> ##################
+> # Midpoint Rooting
+> env.PAML.mid.tree = midpoint(env.PAML.model$tree)
+> 
+> ####
+> # Writing the Rooted Trees to Newick Format.
+> # Midpoint Rooted Tree
+> write.tree(env.PAML.mid.tree, file = "env.LRT.midroot.tree", append = FALSE, digits = 10, tree.names = FALSE)
+> # Unrooted Form for Midpoint Root
+> write.tree(unroot(env.PAML.mid.tree), file = "env.LRT.midunroot.tree", append = FALSE, digits = 10, tree.names = FALSE)
+> 
+> 
+> # After reading the LRs from PAML for the test, we test the significance.
+> # p-value for the test of the presence of the molecular clock assumption:
+> l_0.mid = -29718.832879
+> l_1.mid = -29618.546238
+> 2*(l_1.mid - l_0.mid)
+[1] 200.5733
+> 
+> p.val.molclock.mid = pchisq(2*(l_1.mid - l_0.mid), df=47-2, lower.tail=F)
+> p.val.molclock.mid
+[1] 1.581388e-21
+> 
+> # Thus, the molecular clock assumption is violated since the p-value is less than 0.01.
+> 
+> ###########################################################################################
+>

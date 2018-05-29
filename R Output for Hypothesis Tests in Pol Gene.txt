@@ -1,0 +1,326 @@
+> ################################################
+> ## R Code for Hypothesis Testing for POL Gene ##
+> ################################################
+> 
+> # Open the necessary libraries for the hypotheses tests:
+> library(ape)
+> library(phangorn)
+> 
+> # read the data for the pol genome data set without the outgroup:
+> pol.data = read.phyDat(file = "hiv-polgen-gapstrip.fasta", format = "fasta", type = "DNA")
+> 
+> # Use NJ Tree in the hypotheses tests.
+> pol.dist = dist.ml(pol.data, model = "F81")
+> pol.treeNJ = NJ(pol.dist)
+> 
+> 
+> #######################################
+> # Hierarchical Likelihood Ratio Tests #
+> #######################################
+> 
+> # Use modelTest on the best tree found under neighbour-joining that will compute the objects:
+> # AIC, AICc, AICcw, AICw, BIC, df, logLik, Model
+> pol.mt = modelTest(pol.data, tree = pol.treeNJ, model = c("JC", "F81", "K80", "HKY", "TrNe", "TrN", "SYM",
++   "GTR"), G = TRUE, I = TRUE, FREQ = FALSE, k = 4,
++   control = pml.control(epsilon = 1e-08, maxit = 10, trace = 1),
++   multicore = FALSE, mc.cores = NULL)
+[1] "JC+I"
+[1] "JC+G"
+[1] "JC+G+I"
+[1] "F81+I"
+[1] "F81+G"
+[1] "F81+G+I"
+[1] "K80+I"
+[1] "K80+G"
+[1] "K80+G+I"
+[1] "HKY+I"
+[1] "HKY+G"
+[1] "HKY+G+I"
+[1] "TrNe+I"
+[1] "TrNe+G"
+[1] "TrNe+G+I"
+[1] "TrN+I"
+[1] "TrN+G"
+[1] "TrN+G+I"
+[1] "SYM+I"
+[1] "SYM+G"
+[1] "SYM+G+I"
+[1] "GTR+I"
+[1] "GTR+G"
+[1] "GTR+G+I"
+> pol.stats = cbind(pol.mt$Model, pol.mt$logLik, pol.mt$df)
+> colnames(pol.stats) = c("Model", "  log-likelihood", "  df")
+> pol.stats
+      Model        log-likelihood      df 
+ [1,] "JC"       "-25168.5951090556" "91" 
+ [2,] "JC+I"     "-23509.1568353283" "92" 
+ [3,] "JC+G"     "-23174.5090947464" "92" 
+ [4,] "JC+G+I"   "-23121.7255655476" "93" 
+ [5,] "F81"      "-24851.84249233"   "94" 
+ [6,] "F81+I"    "-23153.7353457948" "95" 
+ [7,] "F81+G"    "-22828.0826639166" "95" 
+ [8,] "F81+G+I"  "-22763.797484466"  "96" 
+ [9,] "K80"      "-23873.8349931404" "92" 
+[10,] "K80+I"    "-22183.8179479339" "93" 
+[11,] "K80+G"    "-21830.1273709617" "93" 
+[12,] "K80+G+I"  "-21770.1487584415" "94" 
+[13,] "HKY"      "-23652.6642759225" "95" 
+[14,] "HKY+I"    "-21906.3656748595" "96" 
+[15,] "HKY+G"    "-21556.5870019942" "96" 
+[16,] "HKY+G+I"  "-21495.8576619774" "97" 
+[17,] "TrNe"     "-23862.833606124"  "93" 
+[18,] "TrNe+I"   "-22178.4721690735" "94" 
+[19,] "TrNe+G"   "-21808.738807849"  "94" 
+[20,] "TrNe+G+I" "-21753.1569496392" "95" 
+[21,] "TrN"      "-23644.0662620057" "96" 
+[22,] "TrN+I"    "-21896.1938593266" "97" 
+[23,] "TrN+G"    "-21555.6486981241" "97" 
+[24,] "TrN+G+I"  "-21493.4789275762" "98" 
+[25,] "SYM"      "-23797.1118737784" "96" 
+[26,] "SYM+I"    "-22126.7431721681" "97" 
+[27,] "SYM+G"    "-21738.7392585674" "97" 
+[28,] "SYM+G+I"  "-21682.5720409996" "98" 
+[29,] "GTR"      "-23580.4024855591" "99" 
+[30,] "GTR+I"    "-21845.2027156259" "100"
+[31,] "GTR+G"    "-21511.6851193997" "100"
+[32,] "GTR+G+I"  "-21451.8208502707" "101"
+> 
+> 
+> # Hierarchical Likelihood Ratio Tests:
+> maxnooftests = 6
+> 
+> Model_H0 = rep(0, maxnooftests)
+> log_H0 = rep(0, maxnooftests)
+> df_H0 = rep(0, maxnooftests)
+> 
+> Model_H1 = rep(0, maxnooftests)
+> log_H1 = rep(0, maxnooftests)
+> df_H1 = rep(0, maxnooftests)
+> 
+> LRT = rep(0, maxnooftests)
+> df.diff = rep(0, maxnooftests)
+> crit.region = rep(0, maxnooftests)
+> decision = rep(0, maxnooftests)
+> 
+> Model_H0 = as.character(Model_H0)
+> Model_H1 = as.character(Model_H1)
+> decision = as.character(decision)
+> 
+> # Location of H0 and H1 from the pol.stats.pml.
+> H0_modelloc = 1
+> H1_modelloc = 5
+> 
+> i = 0
+> j = 1
+> 
+> while(j <= maxnooftests){
++ i = i+1
++ 
++ Model_H0[i] = pol.stats[H0_modelloc, 1]
++ log_H0[i] = as.numeric(pol.stats[H0_modelloc, 2])
++ df_H0[i] = as.numeric(pol.stats[H0_modelloc, 3])
++ 
++ Model_H1[i] = pol.stats[H1_modelloc, 1]
++ log_H1[i] = as.numeric(pol.stats[H1_modelloc, 2])
++ df_H1[i] = as.numeric(pol.stats[H1_modelloc, 3])
++ 
++ LRT[i] = 2*( log_H1[i] - log_H0[i] )
++ df.diff[i] = df_H1[i] - df_H0[i]
++ if(j > 4){
++ crit.region[i] = 5.41
++ # Since H0 for +G and +I tests follow a 50:50 mixture of 0 point mass
++ # and Chi-Squared(1), that test statistic has to be used.
++ # Obtained from Yang(2006)
++ }
++ 
++ else{
++ crit.region[i] = qchisq(0.01, df=df.diff[i], lower.tail=F)     # At 1% CR
++ }
++ 
++ 
++ if( as.numeric(LRT[i]) >= as.numeric(crit.region[i]) ){
++ decision[i] = "Reject_H0"
++ }
++ 
++ if( as.numeric(LRT[i]) < as.numeric(crit.region[i]) ){
++ decision[i] = "Reject_H1"
++ }
++ 
++ 
++ if(j == 1){
++ if(decision[i] == "Reject_H1"){
++ H0_modelloc = H0_modelloc
++ }
++ 
++ else if(decision[i] == "Reject_H0"){
++ H0_modelloc = H1_modelloc
++ }
++ 
++ H1_modelloc = H0_modelloc + 8
++ j = j+1
++ }
++ 
++ else if(j == 2){
++ if(decision[i] == "Reject_H1"){
++ H0_modelloc = H0_modelloc
++ H1_modelloc = H0_modelloc + 2
++ j = maxnooftests - 1
++ }
++ 
++ else if(decision[i] == "Reject_H0"){
++ H0_modelloc = H1_modelloc
++ H1_modelloc = H0_modelloc + 8
++ j = j+1
++ }
++ }
++ 
++ else if(j == 3){
++ if(decision[i] == "Reject_H1"){
++ H0_modelloc = H0_modelloc
++ H1_modelloc = H0_modelloc + 16
++ }
++ 
++ else if(decision[i] == "Reject_H0"){
++ H0_modelloc = H1_modelloc
++ H1_modelloc = H0_modelloc + 8
++ }
++ 
++ j = j+1
++ }
++ 
++ else if(j == 4){
++ if(decision[i] == "Reject_H1"){
++ H0_modelloc = H0_modelloc
++ }
++ 
++ else if(decision[i] == "Reject_H0"){
++ H0_modelloc = H1_modelloc
++ }
++ 
++ H1_modelloc = H0_modelloc + 2
++ j = j+1
++ }
++ 
++ 
++ else if(j == maxnooftests-1){
++ if(decision[i] == "Reject_H1"){
++ H0_modelloc = H0_modelloc
++ }
++ 
++ else if(decision[i] == "Reject_H0"){
++ H0_modelloc = H1_modelloc
++ }
++ 
++ H1_modelloc = H0_modelloc + 1
++ j = j+1
++ 
++ }
++ 
++ else if(j == maxnooftests){
++ if(decision[i] == "Reject_H1"){
++ pol.best.model = pol.stats[H0_modelloc, 1]
++ }
++ else if(decision[i] == "Reject_H0"){
++ pol.best.model = pol.stats[H1_modelloc, 1]
++ }
++ j = j+1
++ }
++ 
++ }
+> 
+> 
+> pol.hypothtests = cbind( Model_H0, log_H0, df_H0, Model_H1, log_H1, df_H1, LRT, df.diff, crit.region, decision )
+> pol.hypothtests
+     Model_H0 log_H0              df_H0 Model_H1  log_H1              df_H1
+[1,] "JC"     "-25168.5951090556" "91"  "F81"     "-24851.84249233"   "94" 
+[2,] "F81"    "-24851.84249233"   "94"  "HKY"     "-23652.6642759225" "95" 
+[3,] "HKY"    "-23652.6642759225" "95"  "TrN"     "-23644.0662620057" "96" 
+[4,] "TrN"    "-23644.0662620057" "96"  "GTR"     "-23580.4024855591" "99" 
+[5,] "GTR"    "-23580.4024855591" "99"  "GTR+G"   "-21511.6851193997" "100"
+[6,] "GTR+G"  "-21511.6851193997" "100" "GTR+G+I" "-21451.8208502707" "101"
+     LRT                df.diff crit.region        decision   
+[1,] "633.5052334512"   "3"     "11.3448667301444" "Reject_H0"
+[2,] "2398.356432815"   "1"     "6.63489660102121" "Reject_H0"
+[3,] "17.1960278335973" "1"     "6.63489660102121" "Reject_H0"
+[4,] "127.327552893199" "3"     "11.3448667301444" "Reject_H0"
+[5,] "4137.4347323188"  "1"     "5.41"             "Reject_H0"
+[6,] "119.728538258001" "1"     "5.41"             "Reject_H0"
+> 
+> 
+> # Selected Nucleotide Substitution Model:
+> pol.best.model
+    Model 
+"GTR+G+I" 
+> 
+> # Here, we see that it is the GTR+I+G.
+> # The model can be derived as follows:
+> env = attr(pol.mt, "env")
+> pol.ML.model = eval(get("GTR+G+I", env), env)
+> pol.ML.model
+
+ loglikelihood: -21451.82 
+
+unconstrained loglikelihood: -11367.21 
+Proportion of invariant sites: 0.4607319 
+Discrete gamma model
+Number of rate categories: 4 
+Shape parameter: 0.7835728 
+
+Rate matrix:
+          a         c        g          t
+a 0.0000000  2.290616 8.660387  0.9516866
+c 2.2906158  0.000000 1.227452 10.4604854
+g 8.6603874  1.227452 0.000000  1.0000000
+t 0.9516866 10.460485 1.000000  0.0000000
+
+Base frequencies:  
+0.4048305 0.161245 0.2146123 0.2193122 
+> 
+> ############################################################################################
+> 
+> #############################
+> #   Molecular Clock Tests   #
+> #############################
+> 
+> # To test the molecular clock assumption, we need to derive the likelihood scores from PAML software.
+> # The PAML software requires the use of a tree.
+> # We will use the GTR+G tree derived from these LRTs to compare the molecular clock assumption.
+> # The option of invariable sites is not available in PAML.
+> pol.PAML.model = eval(get("GTR+G", env), env)
+> 
+> 
+> # For the molecular clock tests:
+> # Tree for H0 is unrooted. Tree from H1 is rooted.
+> # We will root via the midpoint since we have no outgroup.
+> 
+> 
+> ############################################################
+> # Rooted Tree for PAML
+> 
+> ##################
+> # Midpoint Rooting
+> pol.PAML.mid.tree = midpoint(pol.PAML.model$tree)
+> 
+> ####
+> # Writing the Rooted Trees to Newick Format.
+> # Midpoint Rooted Tree
+> write.tree(pol.PAML.mid.tree, file = "pol.LRT.midroot.tree", append = FALSE, digits = 10, tree.names = FALSE)
+> # Unrooted Form for Midpoint Root
+> write.tree(unroot(pol.PAML.mid.tree), file = "pol.LRT.midunroot.tree", append = FALSE, digits = 10, tree.names = FALSE)
+> 
+> 
+> # After reading the LRs from PAML for the test, we test the significance.
+> # p-value for the test of the presence of the molecular clock assumption:
+> l_0.mid = -21685.589569
+> l_1.mid = -21513.830857
+> 2*(l_1.mid - l_0.mid)
+[1] 343.5174
+> 
+> p.val.molclock.mid = pchisq(2*(l_1.mid - l_0.mid), df=47-2, lower.tail=F)
+> p.val.molclock.mid
+[1] 1.372388e-47
+> 
+> # Thus, the molecular clock assumption is violated since the p-values are less than 0.01.
+> 
+> ###########################################################################################
+>
