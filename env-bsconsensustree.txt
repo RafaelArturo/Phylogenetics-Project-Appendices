@@ -1,0 +1,478 @@
+
+P A U P *
+Version 4.0a (build 161) for 32-bit Microsoft Windows (built on Mar 29 2018 at 13:41:25)
+Sat May 19 01:37:13 2018
+
+        -----------------------------NOTICE-----------------------------
+          This is an alpha-test version that is still changing rapidly.
+          It will expire on 1 Jul 2018.
+        
+          Please report bugs to dave@phylosolutions.com
+        ----------------------------------------------------------------
+
+
+paup> Set criterion=parsimony;
+
+Optimality criterion set to parsimony.
+
+Processing of file "C:\Users\Rafael\Documents\UWI Courses\Postgraduate Studies\M.Sc.
+Project\Phylogenetics Project\Gap-Stripped Data\ENV Data\PAUP\hiv-envgen-gapstrip.nexuss" begins...
+
+Data read in DNA format
+
+Data matrix has 47 taxa, 2226 characters
+Valid character-state symbols: ACGT
+Missing data identified by '?'
+Gaps identified by '-'
+"Equate" macros in effect:
+   R,r ==> {AG}
+   Y,y ==> {CT}
+   M,m ==> {AC}
+   K,k ==> {GT}
+   S,s ==> {CG}
+   W,w ==> {AT}
+   H,h ==> {ACT}
+   B,b ==> {CGT}
+   V,v ==> {ACG}
+   D,d ==> {AGT}
+   N,n ==> {ACGT}
+
+Processing of input file "hiv-envgen-gapstrip.nexuss" completed.
+
+paup> PSet;
+
+paup> Bootstrap nchar=2226;
+
+Bootstrap method with heuristic search:
+  Number of bootstrap replicates = 100
+  Starting seed = 5277
+  Number of characters resampled in each replicate = 2226
+  Optimality criterion = parsimony
+    Character-status summary:
+      Of 2226 total characters:
+        All characters are of type 'unord'
+        All characters have equal weight
+        905 characters are constant (proportion = 0.406559)
+        352 variable characters are parsimony-uninformative
+        Number of parsimony-informative characters = 969
+    Gaps are treated as "missing"
+  Starting tree(s) obtained via stepwise addition
+    Addition sequence: random
+    Number of replicates = 1
+    Starting seed = 5277
+    Number of trees held at each step = 1
+  Branch-swapping algorithm: subtree-pruning-regrafting (SPR) with reconnection limit = 8
+    Steepest descent option not in effect
+  Initial 'Maxtrees' setting = 100
+  Branches collapsed (creating polytomies) if maximum branch length is zero
+  'MulTrees' option not in effect; only 1 tree will be saved per replicate
+  No topological constraints in effect
+  Trees are unrooted
+
+  100 bootstrap replicates completed
+  Time used = 1.95 sec (CPU time = 1.94 sec)
+
+Bootstrap 70% majority-rule consensus tree
+
+/------------------------------------------------------------------------------------ 18.CU.01(1)
+|
+|           /------------------------------------------------------------------------ 18.CU.02(2)
+|           |
+|           |                                                           /------------ B.CU.01(3)
+|           |                                               /----100----+
+|           |                                               |           \------------ B.CU.02(4)
+|           |                                               |
+|           |                                               +------------------------ B.DO.01(21)
+|           |                                               |
+|           |                                               +------------------------ B.DO.02(22)
+|           |                                               |
+|           |                                               +------------------------ B.DO.03(23)
+|           |                                               |
+|           |                                               +------------------------ B.HT.01(25)
+|           |                                               |
+|           |                                               +------------------------ B.HT.02(26)
+|           |                                               |
+|           |                                               +------------------------ B.HT.03(27)
+|           |                                               |
+|           |                                               +------------------------ B.HT.04(28)
+|           |                                               |
+|           |                                               +------------------------ B.HT.05(29)
+|           |                                               |
+|           |                                               |           /------------ B.JM.01(30)
+|           |                                               +----90-----+
+|           |                                               |           \------------ B.JM.03(37)
+|           |                                               |
+|           |                                               +------------------------ B.TT.01(31)
+|           |                                               |
+|           |                                               +------------------------ B.TT.02(32)
+|           |                                               |
+|           |                                   /----100----+------------------------ B.TT.03(33)
+|           |                                   |           |
+|           |                                   |           |           /------------ B.TT.04(34)
+|           |                                   |           +----100----+
+|           |                                   |           |           \------------ B.TT.05(35)
+|           |                                   |           |
+|           |                                   |           +------------------------ B.JM.02(36)
+|           |                                   |           |
+|           |                                   |           +------------------------ B.JM.04(38)
+|           |                                   |           |
+|           |                                   |           +------------------------ B.JM.05(39)
+|           |                                   |           |
+|           |                                   |           +------------------------ B.JM.06(40)
+|           |                                   |           |
+|           |           /----------98-----------+           +------------------------ B.JM.07(41)
+\-----------+           |                       |           |
+            |           |                       |           +------------------------ B.JM.08(42)
+            |           |                       |           |
+            |           |                       |           |           /------------ B.CU.03(43)
+            |           |                       |           +----97-----+
+            |           |                       |           |           \------------ B.CU.04(44)
+            |           |                       |           |
+            |           |                       |           |           /------------ B.CU.05(45)
+            |           |                       |           +----100----+
+            |           |                       |           |           \------------ B.CU.06(46)
+            |           |                       |           |
+            |           |                       |           \------------------------ B.DO.04(47)
+            |           |                       |
+            |           |                       \------------------------------------ BC.DO.01(24)
+            |           |
+            |           |                                   /------------------------ 20BG.CU.01(5)
+            |           |                                   |
+            |           |                                   |           /------------ BG.CU.01(6)
+            |           |                                   +----99-----+
+            |           |                                   |           \------------ 23BG.CU.01(15)
+            |           |                                   |
+            +----100----+                                   +------------------------ 23BG.CU.02(16)
+            |           |                       /----100----+
+            |           |                       |           +------------------------ 24BG.CU.01(17)
+            |           |                       |           |
+            |           |                       |           +------------------------ 24BG.CU.02(18)
+            |           |                       |           |
+            |           |           /----100----+           +------------------------ 24BG.CU.03(19)
+            |           |           |           |           |
+            |           |           |           |           \------------------------ 20BG.CU.02(20)
+            |           |           |           |
+            |           +----100----+           \------------------------------------ G.CU.01(7)
+            |           |           |
+            |           |           +------------------------------------------------ G.CU.02(8)
+            |           |           |
+            |           |           \------------------------------------------------ G.CU.03(9)
+            |           |
+            |           |                                               /------------ 19.CU.01(10)
+            |           |                                               |
+            |           +----------------------100----------------------+------------ 19.CU.02(11)
+            |           |                                               |
+            |           |                                               \------------ 19.CU.03(13)
+            |           |
+            |           \------------------------------------------------------------ 1819.CU.01(14)
+            |
+            \------------------------------------------------------------------------ 18.CU.03(12)
+
+paup> SaveTrees file='C:\Users\Rafael\Documents\UWI Courses\Postgraduate Studies\M.Sc.
+Project\Phylogenetics Project\Gap-Stripped Data\ENV Data\PAUP\env-MPbsconsensus.txt';
+
+1 tree saved to file "C:\Users\Rafael\Documents\UWI Courses\Postgraduate Studies\M.Sc.
+Project\Phylogenetics Project\Gap-Stripped Data\ENV Data\PAUP\env-MPbsconsensus.txt" in raw Newick
+format
+
+paup> Set criterion=distance;
+
+Optimality criterion set to distance.
+
+paup> DSet pInvar=0.261053 shape=0.803622;
+
+paup> Bootstrap;
+
+Bootstrap method with heuristic search:
+  Number of bootstrap replicates = 100
+  Starting seed = 5277
+  Number of characters resampled in each replicate = 2226
+  Optimality criterion = distance (minimum evolution)
+    Negative branch lengths allowed, but set to zero for tree-score calculation
+    Distance measure = general time-reversible
+    Proportion of sites assumed to be invariable = 0.261053; identical sites removed proportionally
+      to base frequencies estimated from all sites (distances represent mean number of substitutions
+      over all sites)
+    Rates (for variable sites) assumed to follow gamma distribution with shape parameter = 0.803622
+    2226 characters are included
+    All characters have equal weight
+  Starting tree(s) obtained via stepwise addition
+    Addition sequence: random
+    Number of replicates = 1
+    Starting seed = 5277
+    Number of trees held at each step = 1
+  Branch-swapping algorithm: subtree-pruning-regrafting (SPR) with reconnection limit = 8
+    Steepest descent option not in effect
+  Initial 'Maxtrees' setting = 100
+  Zero-length branches not collapsed
+  'MulTrees' option not in effect; only 1 tree will be saved per replicate
+  No topological constraints in effect
+  Trees are unrooted
+
+  100 bootstrap replicates completed
+  Time used = 9.02 sec (CPU time = 8.94 sec)
+
+Bootstrap 70% majority-rule consensus tree
+
+/------------------------------------------------------------------------------------ 18.CU.01(1)
+|
+|          /------------------------------------------------------------------------- 18.CU.02(2)
+|          |
+|          |                                                              /---------- B.CU.01(3)
+|          |                                         /--------100---------+
+|          |                                         |                    \---------- B.CU.02(4)
+|          |                                         |
+|          |                                         +------------------------------- B.DO.01(21)
+|          |                                         |
+|          |                                         +------------------------------- B.DO.02(22)
+|          |                                         |
+|          |                                         +------------------------------- B.DO.03(23)
+|          |                                         |
+|          |                                         +------------------------------- B.HT.01(25)
+|          |                                         |
+|          |                                         +------------------------------- B.HT.02(26)
+|          |                                         |
+|          |                                         +------------------------------- B.HT.03(27)
+|          |                                         |
+|          |                                         +------------------------------- B.HT.04(28)
+|          |                                         |
+|          |                                         +------------------------------- B.HT.05(29)
+|          |                                         |
+|          |                                         |                    /---------- B.JM.01(30)
+|          |                                         +---------89---------+
+|          |                                         |                    \---------- B.JM.03(37)
+|          |                                         |
+|          |                                         +------------------------------- B.TT.01(31)
+|          |                                         |
+|          |                                         +------------------------------- B.TT.02(32)
+|          |                                         |
+|          |                              /---100----+------------------------------- B.TT.03(33)
+|          |                              |          |
+|          |                              |          |                    /---------- B.TT.04(34)
+|          |                              |          +--------100---------+
+|          |                              |          |                    \---------- B.TT.05(35)
+|          |                              |          |
+|          |                              |          +------------------------------- B.JM.02(36)
+|          |                              |          |
+|          |                              |          +------------------------------- B.JM.04(38)
+|          |                              |          |
+|          |                              |          +------------------------------- B.JM.05(39)
+|          |                              |          |
+|          |                              |          |                    /---------- B.JM.06(40)
+|          |                              |          +---------78---------+
+|          |                    /---92----+          |                    \---------- B.JM.08(42)
+\----------+                    |         |          |
+           |                    |         |          +------------------------------- B.JM.07(41)
+           |                    |         |          |
+           |                    |         |          |                    /---------- B.CU.03(43)
+           |                    |         |          |         /----98----+
+           |                    |         |          |         |          \---------- B.CU.04(44)
+           |                    |         |          +---76----+
+           |                    |         |          |         |          /---------- B.CU.05(45)
+           |                    |         |          |         \---100----+
+           |                    |         |          |                    \---------- B.CU.06(46)
+           |                    |         |          |
+           |                    |         |          \------------------------------- B.DO.04(47)
+           |                    |         |
+           |                    |         \------------------------------------------ BC.DO.01(24)
+           |                    |
+           |                    |                              /--------------------- 20BG.CU.01(5)
+           |                    |                              |
+           |                    |                              +--------------------- BG.CU.01(6)
+           |                    |                              |
+           |         /----89----+                              +--------------------- 23BG.CU.01(15)
+           |         |          |                              |
+           |         |          |                              +--------------------- 23BG.CU.02(16)
+           |         |          |                    /---89----+
+           |         |          |                    |         |          /---------- 24BG.CU.01(17)
+           |         |          |                    |         |          |
+           |         |          |                    |         +----91----+---------- 24BG.CU.02(18)
+           |         |          |                    |         |          |
+           |         |          |         /----99----+         |          \---------- 24BG.CU.03(19)
+           |         |          |         |          |         |
+           |         |          |         |          |         \--------------------- 20BG.CU.02(20)
+           |         |          +---100---+          |
+           +---100---+          |         |          \------------------------------- G.CU.01(7)
+           |         |          |         |
+           |         |          |         |                               /---------- G.CU.02(8)
+           |         |          |         \--------------92---------------+
+           |         |          |                                         \---------- G.CU.03(9)
+           |         |          |
+           |         |          |                                         /---------- 19.CU.01(10)
+           |         |          |                              /----93----+
+           |         |          |                              |          \---------- 19.CU.02(11)
+           |         |          \-------------100--------------+
+           |         |                                         \--------------------- 19.CU.03(13)
+           |         |
+           |         \--------------------------------------------------------------- 1819.CU.01(14)
+           |
+           \------------------------------------------------------------------------- 18.CU.03(12)
+
+paup> SaveTrees file='C:\Users\Rafael\Documents\UWI Courses\Postgraduate Studies\M.Sc.
+Project\Phylogenetics Project\Gap-Stripped Data\ENV Data\PAUP\env-MEbsconsensus.txt';
+
+1 tree saved to file "C:\Users\Rafael\Documents\UWI Courses\Postgraduate Studies\M.Sc.
+Project\Phylogenetics Project\Gap-Stripped Data\ENV Data\PAUP\env-MEbsconsensus.txt" in raw Newick
+format
+
+paup> Set criterion=likelihood;
+
+Optimality criterion set to likelihood.
+
+paup> LSet rmatrix=(1.8132725 3.9702444 0.7719366 0.899224 3.9772203) baseFreq=(0.378151 0.178978
+0.214086) shape=0.803622 pinvar=0.261053;
+
+paup> Bootstrap;
+
+Bootstrap method with heuristic search:
+  Number of bootstrap replicates = 100
+  Starting seed = 5277
+  Number of characters resampled in each replicate = 2226
+  Optimality criterion = likelihood
+    2226 characters are included
+    All characters have equal weight
+    Likelihood settings:
+      Current model:
+                               Data type = nucleotide
+                      Substitution types = 6
+                       Exchangeabilities = AC=1.81327 AG=3.97024 AT=0.771937 CG=0.899224 CT=3.97722
+                                          GT=1
+                       State frequencies = user-specified: A=0.378151 C=0.178978 G=0.214086
+                                                           T=0.228784
+          Proportion of invariable sites = 0.261053
+                 Rates at variable sites = gamma, shape=0.803622 (4 categories [mean])
+                    Model correspondence = GTR+I+G
+
+      Number of distinct data patterns under this model = 1185
+      Molecular clock not enforced
+      Starting branch lengths obtained using Rogers-Swofford approximation method (with AccTran
+        reconstruction)
+      Trees with approximate log likelihoods 5% or further from the target score are rejected
+        without additional iteration
+      Branch-length optimization = one-dimensional Newton-Raphson with pass limit=20,
+                                   tolerance=1e-007
+      Likelihood calculations performed in single precision
+      Vector processing enabled
+      Conditional-likelihood rescaling threshold = 1e-020
+      Using 1 thread on 2 physical (4 logical) processors
+
+  Starting tree(s) obtained via stepwise addition
+    Addition sequence: random
+    Number of replicates = 1
+    Starting seed = 5277
+    Number of trees held at each step = 1
+  Branch-swapping algorithm: subtree-pruning-regrafting (SPR) with reconnection limit = 8
+    Steepest descent option not in effect
+  Initial 'Maxtrees' setting = 100
+  Branches collapsed (creating polytomies) if branch length is less than or equal to 1e-008
+  'MulTrees' option not in effect; only 1 tree will be saved per replicate
+  No topological constraints in effect
+  Trees are unrooted
+
+  100 bootstrap replicates completed
+  Time used = 22:53:02 (CPU time = -23973.14 sec)
+
+Bootstrap 70% majority-rule consensus tree
+
+/------------------------------------------------------------------------------------ 18.CU.01(1)
+|
+|          /------------------------------------------------------------------------- 18.CU.02(2)
+|          |
+|          |                                                              /---------- B.CU.01(3)
+|          |                                                   /---100----+
+|          |                                                   |          \---------- B.CU.02(4)
+|          |                                                   |
+|          |                                                   +--------------------- B.DO.01(21)
+|          |                                                   |
+|          |                                                   +--------------------- B.DO.02(22)
+|          |                                                   |
+|          |                                                   +--------------------- B.DO.03(23)
+|          |                                                   |
+|          |                                                   +--------------------- B.HT.01(25)
+|          |                                                   |
+|          |                                                   +--------------------- B.HT.02(26)
+|          |                                                   |
+|          |                                                   +--------------------- B.HT.03(27)
+|          |                                                   |
+|          |                                                   +--------------------- B.HT.04(28)
+|          |                                                   |
+|          |                                                   +--------------------- B.HT.05(29)
+|          |                                                   |
+|          |                                                   |          /---------- B.JM.01(30)
+|          |                                                   +----92----+
+|          |                                                   |          \---------- B.JM.03(37)
+|          |                                                   |
+|          |                                                   |          /---------- B.TT.01(31)
+|          |                                                   +----78----+
+|          |                                                   |          \---------- B.TT.03(33)
+|          |                                                   |
+|          |                                         /---100---+--------------------- B.TT.02(32)
+|          |                                         |         |
+|          |                                         |         |          /---------- B.TT.04(34)
+|          |                                         |         +---100----+
+|          |                                         |         |          \---------- B.TT.05(35)
+|          |                                         |         |
+|          |                                         |         +--------------------- B.JM.02(36)
+|          |                                         |         |
+|          |                                         |         +--------------------- B.JM.04(38)
+|          |                                         |         |
+|          |                                         |         +--------------------- B.JM.05(39)
+|          |                                         |         |
+|          |                                         |         |          /---------- B.JM.06(40)
+|          |                                         |         +----74----+
+|          |         /--------------93---------------+         |          \---------- B.JM.08(42)
+\----------+         |                               |         |
+           |         |                               |         +--------------------- B.JM.07(41)
+           |         |                               |         |
+           |         |                               |         |          /---------- B.CU.03(43)
+           |         |                               |         +----95----+
+           |         |                               |         |          \---------- B.CU.04(44)
+           |         |                               |         |
+           |         |                               |         |          /---------- B.CU.05(45)
+           |         |                               |         +---100----+
+           |         |                               |         |          \---------- B.CU.06(46)
+           |         |                               |         |
+           |         |                               |         \--------------------- B.DO.04(47)
+           |         |                               |
+           |         |                               \------------------------------- BC.DO.01(24)
+           |         |
+           |         |                                                    /---------- 20BG.CU.01(5)
+           |         |                               /---------81---------+
+           |         |                               |                    \---------- 20BG.CU.02(20)
+           |         |                               |
+           |         |                               |                    /---------- BG.CU.01(6)
+           |         |                               +---------96---------+
+           +---100---+                               |                    \---------- 23BG.CU.01(15)
+           |         |                    /---100----+
+           |         |                    |          +------------------------------- 23BG.CU.02(16)
+           |         |                    |          |
+           |         |                    |          |                    /---------- 24BG.CU.01(17)
+           |         |          /---100---+          |         /----71----+
+           |         |          |         |          |         |          \---------- 24BG.CU.03(19)
+           |         |          |         |          \---75----+
+           |         |          |         |                    \--------------------- 24BG.CU.02(18)
+           |         |          |         |
+           |         +---100----+         \------------------------------------------ G.CU.01(7)
+           |         |          |
+           |         |          +---------------------------------------------------- G.CU.02(8)
+           |         |          |
+           |         |          \---------------------------------------------------- G.CU.03(9)
+           |         |
+           |         |                                                    /---------- 19.CU.01(10)
+           |         |                                         /----84----+
+           |         |                                         |          \---------- 19.CU.02(11)
+           |         +-------------------100-------------------+
+           |         |                                         \--------------------- 19.CU.03(13)
+           |         |
+           |         \--------------------------------------------------------------- 1819.CU.01(14)
+           |
+           \------------------------------------------------------------------------- 18.CU.03(12)
+
+paup> SaveTrees file='C:\Users\Rafael\Documents\UWI Courses\Postgraduate Studies\M.Sc.
+Project\Phylogenetics Project\Gap-Stripped Data\ENV Data\PAUP\env-MLbsconsensus.txt';
+
+1 tree saved to file "C:\Users\Rafael\Documents\UWI Courses\Postgraduate Studies\M.Sc.
+Project\Phylogenetics Project\Gap-Stripped Data\ENV Data\PAUP\env-MLbsconsensus.txt" in raw Newick
+format
+
+paup> Log;
